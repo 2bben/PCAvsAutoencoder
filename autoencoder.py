@@ -1,7 +1,7 @@
 
 import torch.nn as nn
 import torch
-import matplotlib.pyplot as plt #plotting
+import matplotlib.pyplot as plt # plotting
 import numpy as np
 
 # Training variables
@@ -17,22 +17,22 @@ class autoencoder(nn.Module):
         
         self.encoder = nn.Sequential()
         
-        self.encoder.add_module("enc_0", nn.Linear(inputD,encoding_dim[0]))
+        self.encoder.add_module("enc_0", nn.Linear(inputD, encoding_dim[0]))
         self.encoder.add_module("relu_0", nn.ReLU())
           
         for l in range(1, len(encoding_dim)):
-            self.encoder.add_module("enc_"+str(l), nn.Linear(encoding_dim[l-1],encoding_dim[l]))
+            self.encoder.add_module("enc_"+str(l), nn.Linear(encoding_dim[l-1], encoding_dim[l]))
             self.encoder.add_module("encBn_"+str(l), nn.BatchNorm1d(encoding_dim[l]))
             self.encoder.add_module("encrelu_"+str(l), nn.ReLU())
                                     
         self.decoder = nn.Sequential()
         
-        for l in range(len(encoding_dim)-1,0,-1):
-            self.decoder.add_module("dec_"+str(l), nn.Linear(encoding_dim[l],encoding_dim[l-1]))
-            self.decoder.add_module("decBn_"+str(l),nn.BatchNorm1d(encoding_dim[l-1]))
+        for l in range(len(encoding_dim)-1, 0, -1):
+            self.decoder.add_module("dec_"+str(l), nn.Linear(encoding_dim[l], encoding_dim[l-1]))
+            self.decoder.add_module("decBn_"+str(l), nn.BatchNorm1d(encoding_dim[l-1]))
             self.decoder.add_module("decrelu_"+str(l), nn.ReLU())
             
-        self.decoder.add_module("dec_0", nn.Linear(encoding_dim[0],inputD))
+        self.decoder.add_module("dec_0", nn.Linear(encoding_dim[0], inputD))
         self.decoder.add_module("decrelu_0", nn.Sigmoid())
         
         self.encoder.apply(self.init_weights)
@@ -43,7 +43,7 @@ class autoencoder(nn.Module):
         x = self.decoder(x)
         return x
     
-    def init_weights(self,m):
+    def init_weights(self, m):
         if type(m) == nn.Linear:
             nn.init.xavier_uniform_(m.weight)
             m.bias.data.fill_(0.01)
@@ -54,7 +54,7 @@ class autoencoder(nn.Module):
 
 
 ######################################
-##  Testing the autoencoder
+#  Testing the autoencoder
 ######################################
 
 def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
@@ -67,7 +67,7 @@ def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-5)
 
     data_tensor = torch.utils.data.TensorDataset(matrixtensor, matrixtensor) 
-    dataloader = torch.utils.data.DataLoader(dataset = data_tensor, batch_size = batch_size, shuffle = True)
+    dataloader = torch.utils.data.DataLoader(dataset=data_tensor, batch_size=batch_size, shuffle=True)
     
     for epoch in range(num_epochs):
         for data in dataloader:
@@ -87,7 +87,7 @@ def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
     
     with torch.no_grad():
         reconMatrixAE = model(matrixtensor.cuda()).cpu().numpy()
-    reconCostAE = np.mean(np.power(reconMatrixAE - matrix,2),axis = 1)
+    reconCostAE = np.mean(np.power(reconMatrixAE - matrix, 2), axis=1)
     reconCostAE = reconCostAE.reshape(-1, 1)
     
     
@@ -95,21 +95,20 @@ def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
         if scatter:
             fig = plt.figure(2)
             ax = plt.axes(projection='3d')
-            #ax.plot_wireframe(matrix[:,0],matrix[:,1],matrix[:,2])
-            ax.scatter3D(reconMatrixAE[:,0],reconMatrixAE[:,1],reconMatrixAE[:,2])
+            # ax.plot_wireframe(matrix[:, 0], matrix[:, 1], matrix[:, 2])
+            ax.scatter3D(reconMatrixAE[:, 0], reconMatrixAE[:, 1], reconMatrixAE[:, 2])
             
         else:
-            X = reconMatrixAE[:,0].reshape(samples,samples)
-            Y = reconMatrixAE[:,1].reshape(samples,samples)
-            Z = reconMatrixAE[:,2].reshape(samples,samples)
+            X = reconMatrixAE[:, 0].reshape(samples, samples)
+            Y = reconMatrixAE[:, 1].reshape(samples, samples)
+            Z = reconMatrixAE[:, 2].reshape(samples, samples)
 
             fig = plt.figure()
             ax = plt.axes(projection='3d')
-            ax.plot_wireframe(X,Y,Z)
+            ax.plot_wireframe(X, Y, Z)
     else:
-        plt.plot(reconMatrixAE[:,0],reconMatrixAE[:,1])
+        plt.plot(reconMatrixAE[:, 0], reconMatrixAE[:, 1])
     
-    
-    print('Reconstruction MSE : ',np.mean(reconCostAE))
+    print('Reconstruction MSE : ', np.mean(reconCostAE))
     plt.show()
     return np.mean(reconCostAE)
