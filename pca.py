@@ -16,7 +16,7 @@ def testPCAFit(matrix, n, three_D=False, scatter=False):
     reconCostPCA = reconCostPCA.reshape(-1, 1)
     print('Reconstruction MSE : ',np.mean(reconCostPCA))
 
-    fig = plt.figure(1)
+    
     if three_D:
         if scatter:
             ax = plt.axes(projection='3d')
@@ -27,10 +27,11 @@ def testPCAFit(matrix, n, three_D=False, scatter=False):
             Y = reconMatrixPCA[:,1].reshape(samples,samples)
             Z = reconMatrixPCA[:,2].reshape(samples,samples)
 
-            fig = plt.figure()
+            fig = plt.figure(1)
             ax = plt.axes(projection='3d')
             ax.plot_wireframe(X,Y,Z)
     else:
+        fig = plt.figure(1)
         plt.plot(reconMatrixPCA[:,0],reconMatrixPCA[:,1])
 
     plt.show()

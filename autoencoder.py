@@ -8,7 +8,6 @@ import numpy as np
 learning_rate = 0.0001
 batch_size = 100
 num_epochs = 1000
-samples = 1000
 
 
 class autoencoder(nn.Module):
@@ -58,6 +57,11 @@ class autoencoder(nn.Module):
 ######################################
 
 def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
+    if three_D:
+        samples = 30
+    else:
+        samples = 1000
+
     matrixtensor = torch.tensor(matrix).float()
     
     input_dim = matrix.shape[1]
@@ -93,7 +97,7 @@ def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
     
     if three_D:
         if scatter:
-            fig = plt.figure(2)
+            
             ax = plt.axes(projection='3d')
             # ax.plot_wireframe(matrix[:, 0], matrix[:, 1], matrix[:, 2])
             ax.scatter3D(reconMatrixAE[:, 0], reconMatrixAE[:, 1], reconMatrixAE[:, 2])
@@ -103,10 +107,11 @@ def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
             Y = reconMatrixAE[:, 1].reshape(samples, samples)
             Z = reconMatrixAE[:, 2].reshape(samples, samples)
 
-            fig = plt.figure()
+            fig = plt.figure(2)
             ax = plt.axes(projection='3d')
             ax.plot_wireframe(X, Y, Z)
     else:
+        fig = plt.figure(2)
         plt.plot(reconMatrixAE[:, 0], reconMatrixAE[:, 1])
     
     print('Reconstruction MSE : ', np.mean(reconCostAE))
