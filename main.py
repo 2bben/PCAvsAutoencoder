@@ -14,16 +14,19 @@ def linear_case():
 	samples = 1000
 	matrix = np.empty((samples, 2))
 	matrix[:, 0] = np.linspace(0, 1000, samples)
-	matrix[:, 1] = 2*matrix[:, 0] + 20  # y = mx + c
-	# matrix = matrix + 10 * np.random.normal(size=matrix.shape)
+	matrix[:, 1] = 2*matrix[:, 0] + 10  # y = mx + c
+	matrix = matrix + 10 * np.random.normal(size=matrix.shape)
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 	plt.figure(0)
 	plt.plot(matrix[:, 0], matrix[:, 1])
 	plt.savefig("figures/lin_true.png")
+	print("\t-> Finished making true plot")
 
 	pca_mean = pca.testPCAFit(matrix, 1, "figures/lin_pca.png")
+	print("\t-> Finished making PCA plot")
 	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "figures/lin_autoencoder.png")
+	print("\t-> Finished making autoencoder plot\n")
 	printMSE(pca_mean, autoencoder_mean)
 
 
@@ -33,16 +36,19 @@ def nonLinear_case():
 	matrix = np.empty((samples, 2))
 	encoding_dim = [100, 50, 1]
 	matrix[:, 0] = np.linspace(0, 1000, samples)
-	matrix[:, 1] = matrix[:, 0] ** 2 + 20  # y = mx^2 + c
-	# matrix = matrix + 10 * np.random.normal(size=matrix.shape)
+	matrix[:, 1] = matrix[:, 0] ** 3 + 10  # y = mx^3 + c
+	matrix = matrix + 10 * np.random.normal(size=matrix.shape)
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 	plt.figure(0)
 	plt.plot(matrix[:, 0], matrix[:, 1])
 	plt.savefig("figures/nonlin_true.png")
+	print("\t-> Finished making true plot")
 
 	pca_mean = pca.testPCAFit(matrix, 1, "figures/nonlin_pca.png")
+	print("\t-> Finished making PCA plot")
 	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "figures/nonlin_autoencoder.png")
+	print("\t-> Finished making autoencoder plot\n")
 	printMSE(pca_mean, autoencoder_mean)
 
 
@@ -55,12 +61,6 @@ def linear_3d():
 	X, Y = np.meshgrid(x, y)
 	Z = Y + X + 20
 
-	plt.figure(0)
-	ax = plt.axes(projection='3d')
-	ax.plot_wireframe(X, Y, Z)
-	ax.scatter3D(X, Y, Z)
-	plt.savefig("figures/lin3D_true.png")
-
 	matrix = np.empty((samples * samples, 3))
 	matrix[:, 0] = X.reshape(samples * samples)
 	matrix[:, 1] = Y.reshape(samples * samples)
@@ -68,8 +68,17 @@ def linear_3d():
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 
+	plt.figure(0)
+	ax = plt.axes(projection='3d')
+	ax.plot_wireframe(X, Y, Z)
+	ax.scatter3D(X, Y, Z)
+	plt.savefig("figures/lin3D_true.png")
+	print("\t-> Finished making true plot")
+
 	pca_mean = pca.testPCAFit(matrix, 2, "figures/lin3D_pca.png", True)
+	print("\t-> Finished making PCA plot")
 	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "figures/lin3D_autoencoder.png", True)
+	print("\t-> Finished making autoencoder plot\n")
 	printMSE(pca_mean, autoencoder_mean)
 
 
@@ -87,6 +96,7 @@ def curve_3d():
 	ax.plot_wireframe(X, Y, Z)
 	#ax.scatter3D(X, Y, Z)
 	plt.savefig("figures/curve3D_true.png")
+	print("\t-> Finished making true plot")
 
 	matrix = np.empty((samples*samples, 3))
 	matrix[:,0] = X.reshape(samples*samples)
@@ -97,7 +107,9 @@ def curve_3d():
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 	
 	pca_mean = pca.testPCAFit(matrix, 2, "figures/curve3D_pca.png", True)
+	print("\t-> Finished making PCA plot")
 	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "figures/curve3D_autoencoder.png", True)
+	print("\t-> Finished making autoencoder plot\n")
 	printMSE(pca_mean, autoencoder_mean)
 
 

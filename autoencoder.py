@@ -4,8 +4,8 @@ import torch.nn as nn
 import torch
 
 # Training variables
-learning_rate = 0.0001
-batch_size = 100
+learning_rate = 0.01
+batch_size = 300
 num_epochs = 1000
 
 
