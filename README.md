@@ -1,14 +1,8 @@
 # Comparisson of autoencoder and PCA   
 
-The code in this github repository shows dimension reduction performed by an autoencoder and PCA. he code heavily 
-relies on the work of Urwa Muaz, see his jupyter notebook with the github link below. The reason this
-repository exist was that we were unable to get his notebook to work.
+The code in this github repository shows input reconstruction performed by an autoencoder and PCA. The code heavily relies on the work of [Urwa Muaz](https://github.com/muaz-urwa/PCA-vs-AutoEncoders
+), and all credit of this work goes to him. The only reason this repository exist was that we were unable to get his notebook to work.
 
-https://github.com/muaz-urwa/PCA-vs-AutoEncoders
-
-And read his article comparing autoencoders and PCA here:
-
-https://medium.com/@urwamuaz/autoencoders-vs-pca-when-to-use-which-73de063f5d7
 
 ## Running the code with google colab
 The easiest way to run this code is with [google colab](https://colab.research.google.com/notebooks/intro.ipynb#recent=true).
