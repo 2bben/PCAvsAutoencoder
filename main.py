@@ -1,6 +1,7 @@
 # add necessary libraries
 import matplotlib.pyplot as plt  # plotting
 import numpy as np
+import sys
 
 # Import files
 import autoencoder
@@ -103,10 +104,11 @@ def printMSE(pca, ae):
 
 def main():
 	np.random.seed(112)
-	# inear_case()
-	# nonLinear_case()
-	# linear_3d()
-	curve_3d()
+	linear_case() if int(sys.argv[1]) == 1 else None
+	nonLinear_case() if int(sys.argv[2]) == 1 else None
+	linear_3d() if int(sys.argv[3]) == 1 else None
+	curve_3d() if int(sys.argv[4]) == 1 else None
+	print("finished")
 
 
 if __name__ == "__main__":
