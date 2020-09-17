@@ -1,18 +1,6 @@
 # add necessary libraries
 import matplotlib.pyplot as plt  # plotting
-import pandas as pd
 import numpy as np
-
-import os
-
-# Import required libraries
-from sklearn.decomposition import PCA
-
-import torch
-import torch.nn as nn
-import torch.utils.data
-
-from mpl_toolkits import mplot3d
 
 # Import files
 import autoencoder
@@ -26,15 +14,15 @@ def linear_case():
 	matrix[:, 0] = np.linspace(0, 1000, samples)
 	matrix[:, 1] = 2*matrix[:, 0] + 20  # y = mx + c
 	# matrix = matrix + 10 * np.random.normal(size=matrix.shape)
-	input_dim = matrix.shape[1]
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 	plt.figure(0)
 	plt.plot(matrix[:, 0], matrix[:, 1])
-	plt.show()
+	plt.savefig("lin_true.png")
 
-	pca_mean = pca.testPCAFit(matrix, 1)
-	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim)
+	pca_mean = pca.testPCAFit(matrix, 1, "lin_pca.png")
+	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "lin_autoencoder.png")
+	printMSE(pca_mean, autoencoder_mean)
 
 
 def nonLinear_case():
@@ -47,10 +35,11 @@ def nonLinear_case():
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 	plt.plot(matrix[:, 0], matrix[:, 1])
-	plt.show()
+	plt.savefig("nonlin_true.png")
 
-	pca_mean = pca.testPCAFit(matrix, 1)
-	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim)
+	pca_mean = pca.testPCAFit(matrix, 1, "nonlin_pca.png")
+	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "nonlin_autoencoder.png")
+	printMSE(pca_mean, autoencoder_mean)
 
 
 def linear_3d():
@@ -61,11 +50,11 @@ def linear_3d():
 	X, Y = np.meshgrid(x, y)
 	Z = Y + X + 20
 
-	#fig = plt.figure()
-	#ax = plt.axes(projection='3d')
-	#ax.plot_wireframe(X, Y, Z)
-	# ax.scatter3D(X, Y, Z)
-	#plt.show()
+	plt.figure(0)
+	ax = plt.axes(projection='3d')
+	ax.plot_wireframe(X, Y, Z)
+	ax.scatter3D(X, Y, Z)
+	plt.savefig("lin3D_true.png")
 
 	matrix = np.empty((samples * samples, 3))
 	matrix[:, 0] = X.reshape(samples * samples)
@@ -74,25 +63,26 @@ def linear_3d():
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 
-	pca_mean = pca.testPCAFit(matrix, 2, True)
-	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, True)
+	pca_mean = pca.testPCAFit(matrix, 2, "lin3D_pca.png", True)
+	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "lin3D_autoencoder.png", True)
+	printMSE(pca_mean, autoencoder_mean)
 
 
 def curve_3d():
 	encoding_dim = [100, 50, 1]
 	samples = 30
-	x = np.linspace(0,1,samples)
+	x = np.linspace(0, 1, samples)
 	y = x
-	X,Y = np.meshgrid(x,y)
-	Z = Y**4 + X**4+ 20
+	X, Y = np.meshgrid(x, y)
+	Z = Y**4 + X**4 + 20
 
-	fig = plt.figure(0)
+	plt.figure(0)
 	ax = plt.axes(projection='3d')
-	ax.plot_wireframe(X,Y,Z)
+	ax.plot_wireframe(X, Y, Z)
 	#ax.scatter3D(X, Y, Z)
-	plt.show()
+	plt.savefig("curve3D_true.png")
 
-	matrix = np.empty((samples*samples,3))
+	matrix = np.empty((samples*samples, 3))
 	matrix[:,0] = X.reshape(samples*samples)
 	matrix[:,1] = Y.reshape(samples*samples)
 	matrix[:,2] = Z.reshape(samples*samples)
@@ -100,8 +90,15 @@ def curve_3d():
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
 	
-	pca_mean = pca.testPCAFit(matrix,2,True)
-	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, True)
+	pca_mean = pca.testPCAFit(matrix, 2, "curve3D_pca.png", True)
+	autoencoder_mean = autoencoder.testAutoEncoderFit(matrix, encoding_dim, "curve3D_autoencoder.png", True)
+	printMSE(pca_mean, autoencoder_mean)
+
+
+def printMSE(pca, ae):
+	print("Reconstruction MSE for PCA:\t\t{} \t\t = {:.3}".format(pca, pca))
+	print("Reconstruction MSE for Autoencoder:\t\t{} \t\t = {:.3}".format(ae, ae))
+	print("-----------------------------------------------------------\n")
 
 
 def main():

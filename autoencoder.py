@@ -1,8 +1,7 @@
-
+import matplotlib.pyplot as plt  # plotting
+import numpy as np
 import torch.nn as nn
 import torch
-import matplotlib.pyplot as plt # plotting
-import numpy as np
 
 # Training variables
 learning_rate = 0.0001
@@ -56,7 +55,7 @@ class autoencoder(nn.Module):
 #  Testing the autoencoder
 ######################################
 
-def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
+def testAutoEncoderFit(matrix, encoding_dim, name,three_D=False, scatter=False):
     if three_D:
         samples = 30
     else:
@@ -87,33 +86,28 @@ def testAutoEncoderFit(matrix, encoding_dim, three_D=False, scatter=False):
             optimizer.step()
         # ===================log========================
 #         print('epoch [{}/{}], loss:{:.4f}, MSE_loss:{:.4f}'
-#             .format(epoch + 1, num_epochs, loss.item(), MSE_loss.item()))   
+#             .format(epoch + 1, num_epochs, loss.item(), MSE_loss.item()))
     
     with torch.no_grad():
         reconMatrixAE = model(matrixtensor.cuda()).cpu().numpy()
     reconCostAE = np.mean(np.power(reconMatrixAE - matrix, 2), axis=1)
     reconCostAE = reconCostAE.reshape(-1, 1)
-    
-    
+
+    plt.figure(2)
     if three_D:
         if scatter:
-            
             ax = plt.axes(projection='3d')
             # ax.plot_wireframe(matrix[:, 0], matrix[:, 1], matrix[:, 2])
             ax.scatter3D(reconMatrixAE[:, 0], reconMatrixAE[:, 1], reconMatrixAE[:, 2])
-            
         else:
             X = reconMatrixAE[:, 0].reshape(samples, samples)
             Y = reconMatrixAE[:, 1].reshape(samples, samples)
             Z = reconMatrixAE[:, 2].reshape(samples, samples)
 
-            fig = plt.figure(2)
             ax = plt.axes(projection='3d')
             ax.plot_wireframe(X, Y, Z)
     else:
-        fig = plt.figure(2)
         plt.plot(reconMatrixAE[:, 0], reconMatrixAE[:, 1])
-    
-    print('Reconstruction MSE : ', np.mean(reconCostAE))
-    plt.show()
+
+    plt.savefig(name)
     return np.mean(reconCostAE)
