@@ -2,12 +2,11 @@ from sklearn.decomposition import PCA
 import numpy as np
 import matplotlib.pyplot as plt #plotting
 
-samples = 30
-
 
 def testPCAFit(matrix, n, three_D=False, scatter=False):
     pca = PCA(n_components=n)
     pca.fit(matrix)
+    samples = 30
 
     reducedMatrixPCA = pca.transform(matrix)
 
