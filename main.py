@@ -37,6 +37,7 @@ def nonLinear_case():
 	# matrix = matrix + 10 * np.random.normal(size=matrix.shape)
 	for i in range(matrix.shape[1]):
 		matrix[:, i] = (matrix[:, i] - matrix[:, i].min()) / (matrix[:, i].max() - matrix[:, i].min())
+	plt.figure(0)
 	plt.plot(matrix[:, 0], matrix[:, 1])
 	plt.savefig("figures/nonlin_true.png")
 
